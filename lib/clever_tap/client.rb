@@ -33,7 +33,7 @@ class CleverTap
         configure.call(config)
 
         # NOTE: set adapter only if there isn't one set
-        config.adapter :net_http if config.builder.handlers.empty?
+        config.adapter :net_http unless config.builder.adapter
 
         config.headers['Content-Type'] = 'application/json'
         config.headers[ACCOUNT_HEADER] = account_id

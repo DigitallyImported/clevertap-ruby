@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ostruct'
 
 describe CleverTap::Response do
   let(:success) do

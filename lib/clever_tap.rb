@@ -28,7 +28,7 @@ class CleverTap
   end
 
   def initialize(**params)
-    @config = Config.new(params)
+    @config = Config.new(**params)
     yield(@config) if block_given?
 
     @config.validate
@@ -42,15 +42,15 @@ class CleverTap
   def upload_events(events, name:, **rest)
     options = rest.merge(event_name: name, identity_field: config.identity_field)
 
-    response = Uploader.new(events, options).call(client)
+    response = Uploader.new(events, **options).call(client)
 
     normalize_response(response, records: events)
-  rescue Faraday::Error::TimeoutError, Faraday::Error::ClientError => e
+  rescue Faraday::TimeoutError, Faraday::ClientError => e
     FailedResponse.new(records: events, message: e.message)
   end
 
   def upload_event(event, **options)
-    upload_events([event], options)
+    upload_events([event], **options)
   end
 
   def upload_profiles(profiles, **options)
@@ -58,12 +58,12 @@ class CleverTap
     response = Uploader.new(profiles, **options).call(client)
 
     normalize_response(response, records: profiles)
-  rescue Faraday::Error::TimeoutError, Faraday::Error::ClientError => e
+  rescue Faraday::TimeoutError, Faraday::ClientError => e
     FailedResponse.new(records: profiles, message: e.message)
   end
 
   def upload_profile(profile, **options)
-    upload_profiles([profile], options)
+    upload_profiles([profile], **options)
   end
 
   private
